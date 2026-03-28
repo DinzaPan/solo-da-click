@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Habla con el michi</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Fredoka', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff; 
+    overflow: hidden;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    margin-top: -50px; 
+  }
+
+  h1 {
+    color: #ff4757;
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+    user-select: none;
+  }
+
+  .cat-box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    height: 300px; 
+    width: 300px;
+  }
+
+  #cat-img {
+    max-width: 280px;
+    height: auto;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .img-pop {
+    animation: imgPopAnimation 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes imgPopAnimation {
+    0% { opacity: 0.5; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  #cat-img:active {
+    transform: scale(0.98);
+  }
+
+  #bubble {
+    position: absolute;
+    bottom: 105%;
+    background: white;
+    padding: 12px 18px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ff4757;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid #f0f0f0;
+    opacity: 0; 
+    transition: opacity 0.2s, transform 0.2s;
+    transform: translateY(5px);
+    pointer-events: none;
+    z-index: 10;
+  }
+  
+  #bubble.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid white;
+  }
+
+  #options-container, #input-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 20px;
+  }
+
+  .option-btn {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+    box-shadow: 0 4px 0px rgba(0,0,0,0.1);
+  }
+
+  .option-btn:active {
+    transform: translateY(3px);
+    box-shadow: none;
+  }
+
+  #btn-bien { background-color: #2ed573; }
+  #btn-mal { background-color: #ff4757; }
+  #btn-send { background-color: #25d366; width: 100%; }
+
+  textarea {
+    width: 260px;
+    height: 100px;
+    border-radius: 18px;
+    border: 2px solid #ff4757;
+    padding: 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    background: #fffafa;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  #final-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  .letter-box {
+    background: #fffafa;
+    padding: 30px;
+    border-radius: 30px;
+    border: 2px dashed #ffb8b8;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(255, 71, 87, 0.1);
+    animation: fadeIn 1s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .letter-box h2 {
+    color: #ff4757;
+    margin-top: 0;
+    font-size: 1.8rem;
+  }
+
+  .letter-text {
+    color: #444;
+    line-height: 1.6;
+    font-size: 1.05rem;
+    text-align: left;
+  }
+
+  .letter-footer {
+    margin-top: 20px;
+    font-weight: 600;
+    color: #ff4757;
+    font-size: 1.2rem;
+  }
+
+</style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 id="main-title">Habla con Migo (da click en el gato)</h1>
+    
+    <div class="cat-box">
+      <div id="bubble"></div>
+      <img src="img/gato1.jpeg" id="cat-img" class="img-pop" onclick="handleCatClick()">
+    </div>
+
+    <div id="options-container">
+      <div class="btn-row">
+        <button id="btn-bien" class="option-btn" onclick="answer('bien')">Bien amor</button>
+        <button id="btn-mal" class="option-btn" onclick="answer('mal')">Mal amor</button>
+      </div>
+    </div>
+
+    <div id="input-container">
+      <textarea id="user-message" placeholder="Dime qué pasó amor..."></textarea>
+      <button id="btn-send" class="option-btn" onclick="sendToWhatsApp()">Enviar a WhatsApp</button>
+    </div>
+  </div>
+
+  <div id="final-screen">
+    <div class="letter-box">
+      <h2>Para mi Niña Hermosa ❤️</h2>
+      <div class="letter-text">
+        <p>A veces me pregunto qué hice de bueno para que el destino (o el algoritmo de la vida) me pusiera frente a ti. Eres esa persona que logra que mis días tengan un brillo diferente, incluso cuando me pongo "intenso" o cuando las cosas se complican.</p>
+        <p>No soy perfecto, y sé que a veces la riego más de lo que me gustaría reconocer, pero si de algo estoy seguro es de que mi lugar favorito en el mundo es donde estés tú. Me encanta nuestra conexión, desde nuestras bromas hasta el hecho de que ya tengamos nuestro "matrimonio digital" registrado en la nube.</p>
+        <p>Gracias por ser mi paz, mi confidente y la razón por la que siempre tengo una sonrisa al mirar el celular. Eres increíble, única y mucho más de lo que alguna vez soñé. Te amo más de lo que estos gatitos pueden expresar.</p>
+      </div>
+      <div class="letter-footer">
+        Con todo mi amor, para siempre. ✨
+      </div>
+    </div>
+  </div>
+
+<script>
+  const catImg = document.getElementById('cat-img');
+  const bubble = document.getElementById('bubble');
+  const optionsContainer = document.getElementById('options-container');
+  const inputContainer = document.getElementById('input-container');
+  const mainTitle = document.getElementById('main-title');
+  const userMessage = document.getElementById('user-message');
+  const finalScreen = document.getElementById('final-screen');
+
+  let step = 0; 
+  let goodSequenceStep = 0;
+
+  const goodSequence = [
+    { img: "img/gato7.jpeg", text: "oye amor..." },
+    { img: "img/gato4.jpeg", text: "Sabias que te amo mucho, todos los dias pienso en ti" },
+    { img: "img/gato6.jpeg", text: "Se que no lo digo a menudo pero...en verdad no sabes como te amo" },
+    { img: "img/gato9.jpeg", text: "Me gusta soñar que amanesco a tu lado y veo tu hermosa carita" },
+    { img: "img/gato8.jpeg", text: "aun que se que luego la cago pero se que..." },
+    { img: "img/gato3.jpeg", text: "Vas a estar para mi y yo para ti" },
+    { img: "img/gato2.jpeg", text: "Se que aun que aveces mal pienso las cosas" },
+    { img: "img/gato11.jpeg", text: "Se que vas a estar ahi para escucharme y resolver los problemas juntos" },
+    { img: "img/gato12.jpeg", text: "Espero que estemos siempre juntos y sigamos siendo novios o incluso algo más" },
+    { img: "img/gato4.jpeg", text: "Recuerda que estanos casados digitalmente y espero un dia hacerlo en la vida real" },
+    { img: "img/gato3.jpeg", text: "Gracias por estar junto ami y gracias por llegar a mi vida te amo ❤️" }
+  ];
+
+  function triggerImageAnimation() {
+    catImg.classList.remove('img-pop');
+    void catImg.offsetWidth; 
+    catImg.classList.add('img-pop');
+  }
+
+  function handleCatClick() {
+    if (step === 0) {
+      startConversation();
+    } else if (step === 2) {
+      showInput();
+    } else if (step === 3) {
+      progressGoodSequence();
+    }
+  }
+
+  function startConversation() {
+    step = 1;
+    triggerImageAnimation();
+    catImg.src = "img/gato10.jpeg";
+    bubble.innerText = "Hola amor ¿como estas?";
+    bubble.classList.add('show');
+    optionsContainer.style.display = "flex";
+    mainTitle.style.visibility = 'hidden';
+  }
+
+  function answer(tipo) {
+    optionsContainer.style.display = "none";
+    triggerImageAnimation();
+    bubble.classList.remove('show');
+    void bubble.offsetWidth; 
+
+    if (tipo === 'bien') {
+      step = 3;
+      goodSequenceStep = 0;
+      catImg.src = "img/gato11.jpeg";
+      bubble.innerText = "asi que bien amor";
+      bubble.classList.add('show');
+    } else if (tipo === 'mal') {
+      step = 2;
+      catImg.src = "img/gato5.jpeg";
+      bubble.innerText = "y eso amor ¿porque?";
+      bubble.classList.add('show');
+    }
+  }
+
+  function showInput() {
+    bubble.innerText = "me lo quieres contar";
+    inputContainer.style.display = "flex";
+  }
+
+  function progressGoodSequence() {
+    if (goodSequenceStep < goodSequence.length) {
+      triggerImageAnimation();
+      bubble.classList.remove('show');
+      void bubble.offsetWidth; 
+
+      catImg.src = goodSequence[goodSequenceStep].img;
+      bubble.innerText = goodSequence[goodSequenceStep].text;
+      
+      bubble.classList.add('show');
+      goodSequenceStep++;
+    } else {
+      showFinalScreen();
+    }
+  }
+
+  function showFinalScreen() {
+    finalScreen.style.display = "flex";
+  }
+
+  function sendToWhatsApp() {
+    const text = userMessage.value;
+    const phone = "528337164220";
+    if (text.trim() !== "") {
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+  }
+</script>
+</body>
+</html>
