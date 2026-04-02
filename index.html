@@ -3,350 +3,297 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Habla con el michi</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+<title>Para My love</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+  }
+
   body {
-    margin: 0; padding: 0;
     font-family: 'Fredoka', sans-serif;
     height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ffffff; 
+    background-color: #ffffff;
     overflow: hidden;
   }
 
-  .container {
+  .content-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 10px;
-    margin-top: -50px; 
+    width: 100%;
   }
 
-  h1 {
-    color: #ff4757;
-    font-size: 1.8rem;
-    margin-bottom: 40px;
-    user-select: none;
-  }
-
-  .cat-box {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    height: 300px; 
-    width: 300px;
-  }
-
-  #cat-img {
-    max-width: 280px;
-    height: auto;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    transition: transform 0.1s;
-    user-select: none;
-    -webkit-user-drag: none;
-  }
-
-  .img-pop {
-    animation: imgPopAnimation 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  @keyframes imgPopAnimation {
-    0% { opacity: 0.5; transform: scale(0.92); }
-    100% { opacity: 1; transform: scale(1); }
-  }
-
-  #cat-img:active {
-    transform: scale(0.98);
-  }
-
-  #bubble {
-    position: absolute;
-    bottom: 105%;
-    background: white;
-    padding: 12px 18px;
-    border-radius: 20px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #ff4757;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    border: 1px solid #f0f0f0;
-    opacity: 0; 
-    transition: opacity 0.2s, transform 0.2s;
-    transform: translateY(5px);
-    pointer-events: none;
-    z-index: 10;
-  }
-  
-  #bubble.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  #bubble::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid white;
-  }
-
-  #options-container, #input-container {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    margin-top: 10px;
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 20px;
-  }
+  h1 { color: #ff4757; font-size: 2.2rem; margin-bottom: 10px; }
+  .subtitle { color: #ff6b81; font-size: 1.2rem; margin-bottom: 30px; }
 
   .option-btn {
-    padding: 12px 25px;
-    font-size: 1.1rem;
+    padding: 12px 35px;
+    font-size: 1.2rem;
     font-weight: 600;
-    font-family: 'Fredoka', sans-serif;
     color: white;
     border: none;
     border-radius: 15px;
     cursor: pointer;
-    transition: transform 0.1s, background-color 0.2s;
-    box-shadow: 0 4px 0px rgba(0,0,0,0.1);
+    background-color: #ff4757;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px auto;
   }
 
-  .option-btn:active {
-    transform: translateY(3px);
-    box-shadow: none;
-  }
-
-  #btn-bien { background-color: #2ed573; }
-  #btn-mal { background-color: #ff4757; }
-  #btn-send { background-color: #25d366; width: 100%; }
-
-  textarea {
-    width: 260px;
-    height: 100px;
-    border-radius: 18px;
-    border: 2px solid #ff4757;
-    padding: 12px;
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1rem;
-    resize: none;
-    outline: none;
-    background: #fffafa;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-  }
-
-  #final-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #ffffff;
+  #message-container {
     display: none;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    z-index: 100;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
+    width: 100%;
+    animation: fadeIn 0.8s ease;
   }
 
-  .letter-box {
-    background: #fffafa;
-    padding: 30px;
-    border-radius: 30px;
-    border: 2px dashed #ffb8b8;
-    max-width: 500px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(255, 71, 87, 0.1);
+  .bubble {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    max-width: 85%;
+    color: #ff4757;
+    font-weight: 600;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #000000 transparent;
+  }
+
+  .bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #ffffff transparent;
+    z-index: 1;
+  }
+
+  .cat-img {
+    width: 280px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .button-group {
+    display: none;
+    gap: 15px;
+    margin-top: 15px;
+  }
+
+  #final-text {
+    display: none;
+    color: #ff4757;
+    font-size: 4rem;
+    font-weight: 700;
     animation: fadeIn 1s ease;
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
   }
-
-  .letter-box h2 {
-    color: #ff4757;
-    margin-top: 0;
-    font-size: 1.8rem;
-  }
-
-  .letter-text {
-    color: #444;
-    line-height: 1.6;
-    font-size: 1.05rem;
-    text-align: left;
-  }
-
-  .letter-footer {
-    margin-top: 20px;
-    font-weight: 600;
-    color: #ff4757;
-    font-size: 1.2rem;
-  }
-
 </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1 id="main-title">Habla con Migo (da click en el gato)</h1>
-    
-    <div class="cat-box">
-      <div id="bubble"></div>
-      <img src="img/gato1.jpeg" id="cat-img" class="img-pop" onclick="handleCatClick()">
-    </div>
+<div class="content-wrapper">
+  <div id="start-screen">
+    <h1>¿Quieres Comenzar?</h1>
+    <p class="subtitle">Felices 4 Meses de relación</p>
+    <button id="btn-play" class="option-btn">Play</button>
+  </div>
 
-    <div id="options-container">
-      <div class="btn-row">
-        <button id="btn-bien" class="option-btn" onclick="answer('bien')">Bien amor</button>
-        <button id="btn-mal" class="option-btn" onclick="answer('mal')">Mal amor</button>
-      </div>
-    </div>
-
-    <div id="input-container">
-      <textarea id="user-message" placeholder="Dime qué pasó amor..."></textarea>
-      <button id="btn-send" class="option-btn" onclick="sendToWhatsApp()">Enviar a WhatsApp</button>
+  <div id="message-container">
+    <div class="bubble" id="dialogue-text">Hola de Nuevo creo que ya es costumbre ver a alguien tan hermosa por aqui</div>
+    <img src="img/gato3.jpeg" alt="Gato" class="cat-img" id="cat-main">
+    <div class="button-group" id="btn-choice-group">
+      <button class="option-btn" id="btn-yes">Sí</button>
+      <button class="option-btn" id="btn-no">No</button>
     </div>
   </div>
 
-  <div id="final-screen">
-    <div class="letter-box">
-      <h2>Para mi Niña Hermosa ❤️</h2>
-      <div class="letter-text">
-        <p>A veces me pregunto qué hice de bueno para que el destino (o el algoritmo de la vida) me pusiera frente a ti. Eres esa persona que logra que mis días tengan un brillo diferente, incluso cuando me pongo "intenso" o cuando las cosas se complican.</p>
-        <p>No soy perfecto, y sé que a veces la riego más de lo que me gustaría reconocer, pero si de algo estoy seguro es de que mi lugar favorito en el mundo es donde estés tú. Me encanta nuestra conexión, desde nuestras bromas hasta el hecho de que ya tengamos nuestro "matrimonio digital" registrado en la nube.</p>
-        <p>Gracias por ser mi paz, mi confidente y la razón por la que siempre tengo una sonrisa al mirar el celular. Eres increíble, única y mucho más de lo que alguna vez soñé. Te amo más de lo que estos gatitos pueden expresar.</p>
-      </div>
-      <div class="letter-footer">
-        Con todo mi amor, para siempre. ✨
-      </div>
-    </div>
-  </div>
+  <div id="final-text">Fin ❤️</div>
+</div>
 
 <script>
-  const catImg = document.getElementById('cat-img');
-  const bubble = document.getElementById('bubble');
-  const optionsContainer = document.getElementById('options-container');
-  const inputContainer = document.getElementById('input-container');
-  const mainTitle = document.getElementById('main-title');
-  const userMessage = document.getElementById('user-message');
-  const finalScreen = document.getElementById('final-screen');
+  const btnPlay = document.getElementById('btn-play');
+  const startScreen = document.getElementById('start-screen');
+  const messageContainer = document.getElementById('message-container');
+  const catMain = document.getElementById('cat-main');
+  const dialogueText = document.getElementById('dialogue-text');
+  const btnGroup = document.getElementById('btn-choice-group');
+  const btnYes = document.getElementById('btn-yes');
+  const btnNo = document.getElementById('btn-no');
+  const finalText = document.getElementById('final-text');
 
-  let step = 0; 
-  let goodSequenceStep = 0;
+  let currentState = 0;
+  let audio = new Audio('music/mylove.mp3');
+  let syncInterval = null;
 
-  const goodSequence = [
-    { img: "img/gato7.jpeg", text: "oye amor..." },
-    { img: "img/gato4.jpeg", text: "Sabias que te amo mucho, todos los dias pienso en ti" },
-    { img: "img/gato6.jpeg", text: "Se que no lo digo a menudo pero...en verdad no sabes como te amo" },
-    { img: "img/gato9.jpeg", text: "Me gusta soñar que amanesco a tu lado y veo tu hermosa carita" },
-    { img: "img/gato8.jpeg", text: "aun que se que luego la cago pero se que..." },
-    { img: "img/gato3.jpeg", text: "Vas a estar para mi y yo para ti" },
-    { img: "img/gato2.jpeg", text: "Se que aun que aveces mal pienso las cosas" },
-    { img: "img/gato11.jpeg", text: "Se que vas a estar ahi para escucharme y resolver los problemas juntos" },
-    { img: "img/gato12.jpeg", text: "Espero que estemos siempre juntos y sigamos siendo novios o incluso algo más" },
-    { img: "img/gato4.jpeg", text: "Recuerda que estanos casados digitalmente y espero un dia hacerlo en la vida real" },
-    { img: "img/gato3.jpeg", text: "Gracias por estar junto ami y gracias por llegar a mi vida te amo ❤️" }
+  const lyrics = [
+    { start: 9.60, text: "Tus besos se llegaron a recrear aquí en" },
+    { start: 14.64, text: "mi boca" },
+    { start: 18.80, text: "llenando de ilusión y de pasión" },
+    { start: 23.08, text: "mi vida loca" },
+    { start: 28.04, text: "las horas más felices" },
+    { start: 30.28, text: "de mi amor fueron con tigo" },
+    { start: 37.36, text: "por eso es que mi alma siempre extrañe" },
+    { start: 41.44, text: "el dulce alivio" },
+    { start: 46.48, text: "te puedo yo jurar ante un altar" },
+    { start: 50.44, text: "Mi amor sincero" },
+    { start: 55.72, text: "a todo el mundo le puedes contar que..." },
+    { start: 60.28, text: "Si te quiero" },
+    { start: 64.64, text: "tus labios me ensañaron a sentir lo que" },
+    { start: 69.32, text: "es ternura" },
+    { start: 73.92, text: "y no me cansaré de bendecir tanta" },
+    { start: 78.84, text: "dulzura" }
   ];
 
-  function triggerImageAnimation() {
-    catImg.classList.remove('img-pop');
-    void catImg.offsetWidth; 
-    catImg.classList.add('img-pop');
-  }
+  const story = [
+    { img: "img/gato3.jpeg", text: "Hola de Nuevo creo que ya es costumbre ver a alguien tan hermosa por aqui", type: "click" },
+    { img: "img/gato7.jpeg", text: "Emm...Te preguntaras para que te hice esta página verdad?", type: "choice" },
+    { img: "img/gato13.jpeg", text: "Que no es obvio para deciarte un felices 4 meses de relación mi niña hermosa", type: "click" },
+    { img: "img/gato11.jpeg", text: "Te gusto la página, esto es todo jeje....", type: "click" },
+    { img: "img/gato14.jpeg", text: "No me crees que esto es todo??", type: "choice2" },
+    { img: "img/gato15.jpeg", text: "Bueno no te equivocas...", type: "click" },
+    { img: "img/gato16.jpeg", text: "Tu crees que tu amado que se paso asiendo esta página únicamente para ti aria solo eso", type: "click" },
+    { img: "img/gato17.jpeg", text: "Pues claro que no, sabes algo mvd...", type: "click" },
+    { img: "img/gato18.jpeg", text: "Aveces quisiera tener mas dinero para darte todo lo que quieras y llenarte de regalos", type: "click" },
+    { img: "img/gato19.jpeg", text: "Aveces quisiera tener dinero infinito no porque diga que seas alguien que le guste el dinero, si no porque no sabes como me gusta verte sonreír cuando te doy algo", type: "click" },
+    { img: "img/gato20.jpeg", text: "Pero nimodo dios me hizo pobre y color humildad extrema 😭", type: "click" },
+    { img: "img/gato14.jpeg", text: "Sabes...", type: "click" },
+    { img: "img/gato15.jpeg", text: "Me gustaría algun dia cantarte esta canción...", type: "click" },
+    { img: "img/gato21.jpeg", text: "...", type: "music" },
+    { img: "img/gato15.jpeg", text: "Entonces...Amor me prometes estar con migo asta el final y ser tu mejor version de ti y yo dar mi mejor versión para ti?", type: "choiceEnd" },
+    { img: "img/gato10.jpeg", text: "Enserió!!!!! Te prometo que intentare siempre estar a tu lado mvd y mandar a la vrg a las demas que seme aserquen", type: "click" },
+    { img: "img/gato6.jpeg", text: "Enverdad no sabes cuanto te amo mvd, espero siempre poder seguir amandote y un dia estar a tu lado sin tanta distancia❤️", type: "click" },
+    { img: "img/gato3.jpeg", text: "Mientras cuidate bien mvd y espero volver a clases para verte otra vez, Te amo mucho mi niña hermosa", type: "click" },
+    { type: "theEnd" }
+  ];
 
-  function handleCatClick() {
-    if (step === 0) {
-      startConversation();
-    } else if (step === 2) {
-      showInput();
-    } else if (step === 3) {
-      progressGoodSequence();
+  function updateDisplay() {
+    if (currentState >= story.length) return;
+    
+    const step = story[currentState];
+
+    if (step.type === "theEnd") {
+      messageContainer.style.display = "none";
+      finalText.style.display = "block";
+      return;
     }
-  }
 
-  function startConversation() {
-    step = 1;
-    triggerImageAnimation();
-    catImg.src = "img/gato10.jpeg";
-    bubble.innerText = "Hola amor ¿como estas?";
-    bubble.classList.add('show');
-    optionsContainer.style.display = "flex";
-    mainTitle.style.visibility = 'hidden';
-  }
+    catMain.src = step.img;
+    dialogueText.innerText = step.text;
 
-  function answer(tipo) {
-    optionsContainer.style.display = "none";
-    triggerImageAnimation();
-    bubble.classList.remove('show');
-    void bubble.offsetWidth; 
-
-    if (tipo === 'bien') {
-      step = 3;
-      goodSequenceStep = 0;
-      catImg.src = "img/gato11.jpeg";
-      bubble.innerText = "asi que bien amor";
-      bubble.classList.add('show');
-    } else if (tipo === 'mal') {
-      step = 2;
-      catImg.src = "img/gato5.jpeg";
-      bubble.innerText = "y eso amor ¿porque?";
-      bubble.classList.add('show');
-    }
-  }
-
-  function showInput() {
-    bubble.innerText = "me lo quieres contar";
-    inputContainer.style.display = "flex";
-  }
-
-  function progressGoodSequence() {
-    if (goodSequenceStep < goodSequence.length) {
-      triggerImageAnimation();
-      bubble.classList.remove('show');
-      void bubble.offsetWidth; 
-
-      catImg.src = goodSequence[goodSequenceStep].img;
-      bubble.innerText = goodSequence[goodSequenceStep].text;
-      
-      bubble.classList.add('show');
-      goodSequenceStep++;
+    if (step.type === "choice" || step.type === "choice2" || step.type === "choiceEnd") {
+      btnGroup.style.display = "flex";
+      catMain.style.pointerEvents = "none";
     } else {
-      showFinalScreen();
+      btnGroup.style.display = "none";
+      catMain.style.pointerEvents = (step.type === "music") ? "none" : "auto";
+    }
+
+    if (step.type === "music") {
+      startMusicLogic();
     }
   }
 
-  function showFinalScreen() {
-    finalScreen.style.display = "flex";
+  function startMusicLogic() {
+    audio.currentTime = 0;
+    audio.volume = 1;
+    audio.play();
+    
+    syncInterval = setInterval(() => {
+      const time = audio.currentTime;
+      const currentLyric = lyrics.filter(l => time >= l.start).pop();
+      
+      if (currentLyric) {
+        dialogueText.innerText = currentLyric.text;
+        
+        if (currentLyric.text === "dulzura") {
+          clearInterval(syncInterval);
+          setTimeout(() => {
+            fadeAndNext();
+          }, 3000);
+        }
+      }
+    }, 100);
   }
 
-  function sendToWhatsApp() {
-    const text = userMessage.value;
-    const phone = "528337164220";
-    if (text.trim() !== "") {
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
-    }
+  function fadeAndNext() {
+    let fade = setInterval(() => {
+      if (audio.volume > 0.1) {
+        audio.volume -= 0.1;
+      } else {
+        audio.pause();
+        clearInterval(fade);
+        currentState++;
+        updateDisplay();
+      }
+    }, 200);
   }
+
+  btnPlay.addEventListener('click', () => {
+    startScreen.style.display = 'none';
+    messageContainer.style.display = 'flex';
+  });
+
+  catMain.addEventListener('click', () => {
+    if (currentState < story.length - 1) {
+      currentState++;
+      updateDisplay();
+    }
+  });
+
+  btnYes.addEventListener('click', () => {
+    if (story[currentState].type === "choice" || story[currentState].type === "choiceEnd") {
+      currentState++;
+      updateDisplay();
+    } else if (story[currentState].type === "choice2") {
+      location.reload();
+    }
+  });
+
+  btnNo.addEventListener('click', () => {
+    if (story[currentState].type === "choice" || story[currentState].type === "choiceEnd") {
+      location.reload();
+    } else if (story[currentState].type === "choice2") {
+      currentState++;
+      updateDisplay();
+    }
+  });
 </script>
 </body>
 </html>
